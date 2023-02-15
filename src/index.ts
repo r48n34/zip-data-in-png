@@ -36,13 +36,22 @@ while(true){
     console.log("chunk_csum:", chunk_csum)
 
     if(["IHDR", "PLTE", "IDAT", "IEND"].indexOf(chunk_type.toString()) === -1){
-        console.log("Warning: dropping non-essential or unknown chunk:", chunk_type.toString())
+        console.log("Warning: dropping non-essential or unknown chunk:", chunk_type.toString());
+        i = (i + 8 + chunk_len + 4)
 		continue
     }
 
+    console.log("-----------------");
+    
 
-    i += (i + 8 + chunk_len + 4)
-    break;
+
+
+    if (chunk_type.toString() == "IEND"){
+        break
+    }
+
+    i = (i + 8 + chunk_len + 4)
+    // break;
 }
 
 fs.writeFileSync("hello.png", Uint8Array.from(png_out));
