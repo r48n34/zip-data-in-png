@@ -86,11 +86,10 @@ while(true){
         utf8Encode.encode("IDAT").forEach( v => png_out.push(v) ) // png_out.write(b"IDAT")
         idat_body.forEach( v => png_out.push(v) ) // png_out.write(idat_body)
 
-        let buffTemp = new Buffer([...utf8Encode.encode("IDAT"), ...idat_body])
+        let buffTemp = Buffer.from([...utf8Encode.encode("IDAT"), ...idat_body])
         console.log("zlib.crc32", crc32.unsigned(buffTemp));
 
         len_to_bytes(crc32.unsigned(buffTemp)).forEach( v => png_out.push(v) ) // zlib.crc32
-        
     }
 
     

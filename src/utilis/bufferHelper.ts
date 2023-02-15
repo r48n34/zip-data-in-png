@@ -9,6 +9,6 @@ export function len_to_bytes(num: number, bytesCount: number = 4){
 
     const data = Array.from(new Uint8Array(b));
 
-    console.log(data);
+    // console.log(data);
     return data
 }
