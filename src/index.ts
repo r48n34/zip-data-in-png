@@ -18,6 +18,8 @@ const png_in = fs.readFileSync(png_in_path, {flag:'r'});
 let png_out: number[] = [] // Uint8Array at final
 utf8Encode.encode("\x89PNG\r\n\x1a\n").forEach( v => png_out.push(v) )
 
+// let idat_body: number[] = []
+
 let i = 8;
 while(true){
     let chunk_len_raw = png_in.subarray(i, i + 4) 
@@ -41,6 +43,13 @@ while(true){
 
         console.log("-----------------");
 		continue
+    }
+
+    if (chunk_type.toString() == "IHDR"){   
+        let width = int_from_bytes(chunk_body.subarray(0, 4));
+        let height = int_from_bytes(chunk_body.subarray(4, 8));
+
+		console.log(`Image size: ${width}x${height}px`)
     }
 
     
