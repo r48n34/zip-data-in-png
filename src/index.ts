@@ -19,6 +19,9 @@ utf8Encode.encode("\x89PNG\r\n\x1a\n").forEach( v => png_out.push(v) )
 
 
 while(true){
+
+
+    console.log(png_in.subarray(0, 8));
     
     
     break;

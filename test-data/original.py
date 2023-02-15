@@ -50,13 +50,23 @@ png_out.write(png_header)
 
 idat_body = b""
 
+print(png_header)
+print("--------------------------")
+
 # iterate through the chunks of the PNG file
 while True:
 	# parse a chunk
 	chunk_len = int.from_bytes(png_in.read(4), "big")
 	chunk_type = png_in.read(4)
+
 	chunk_body = png_in.read(chunk_len)
 	chunk_csum = int.from_bytes(png_in.read(4), "big")
+
+	print("chunk_len:", chunk_len)
+	print("chunk_type:", chunk_type)
+	print("chunk_body:", chunk_body)
+	print("chunk_csum:", chunk_csum)
+	print("--------------------------")
 	
 	# if it's a non-essential chunk, skip over it
 	if chunk_type not in [b"IHDR", b"PLTE", b"IDAT", b"IEND"]:
@@ -103,6 +113,7 @@ while True:
 	png_out.write(chunk_type)
 	png_out.write(chunk_body)
 	png_out.write(chunk_csum.to_bytes(4, "big"))
+
 	
 	if chunk_type == b"IEND":
 		# we're done!
