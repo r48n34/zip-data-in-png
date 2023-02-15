@@ -132,3 +132,5 @@ while True:
 png_in.close()
 content_in.close()
 png_out.close()
+
+# python original.py deno.png book.pdf helloResultPython.png
