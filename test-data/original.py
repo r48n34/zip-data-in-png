@@ -109,9 +109,12 @@ while True:
 			fixup_zip(idat_body, start_offset)
 		
 		# write the IDAT chunk
+		print("len(idat_body).to_bytes", len(idat_body).to_bytes(4, "big"))
 		png_out.write(len(idat_body).to_bytes(4, "big"))
 		png_out.write(b"IDAT")
 		png_out.write(idat_body)
+
+		print("zlib.crc32", zlib.crc32(b"IDAT" + idat_body))
 		png_out.write(zlib.crc32(b"IDAT" + idat_body).to_bytes(4, "big"))
 	
 	# if we reached here, we're writing the IHDR, PLTE or IEND chunk

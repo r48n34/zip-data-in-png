@@ -1,9 +1,10 @@
 import path from "path";
 import fs from "fs";
 // import FileType from 'file-type';
+import crc32 from "buffer-crc32"
 
-import { checkIsPng } from "./utilis/checkIsPng";
-import { int_from_bytes } from "./utilis/bufferHelper";
+import { checkIsPng, checkIsZip } from "./utilis/checkIsPng";
+import { int_from_bytes, len_to_bytes } from "./utilis/bufferHelper";
 
 let utf8Encode = new TextEncoder();
 
@@ -13,7 +14,7 @@ checkIsPng(png_in_path);
 const png_in = fs.readFileSync(png_in_path, {flag:'r'});
 
 
-const content_in_path = path.join(__dirname, "..", "test-data", "hello.zip")
+const content_in_path = path.join(__dirname, "..", "test-data", "hello.txt")
 const content_in = fs.readFileSync(content_in_path, {flag:'r'});
 
 let png_out: number[] = [] // Uint8Array at final
@@ -76,6 +77,18 @@ while(true){
         if(idat_body.length > width * height){
             throw new Error("ERROR: Input files too big for cover image resolution.")
         }
+
+        if(checkIsZip(content_in_path)){
+            console.log("Fixing up zip offsets...")
+        }
+
+        len_to_bytes(idat_body.length).forEach( v => png_out.push(v))
+        utf8Encode.encode("IDAT").forEach( v => png_out.push(v) )
+        idat_body.forEach( v => png_out.push(v) )
+
+        let buffTemp = new Buffer([...utf8Encode.encode("IDAT"), ...idat_body])
+        console.log("zlib.crc32", crc32.unsigned(buffTemp));
+        
     }
 
     

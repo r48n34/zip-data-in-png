@@ -10,3 +10,17 @@ export function checkIsPng(filePath: string): boolean{
     
     return true
 }
+
+export function checkIsZip(filePath: string): boolean{
+    const type = filetype(fs.readFileSync(filePath)).map( v => v.typename )
+
+    if(type.length === 0){
+        return false
+    }
+
+    if(type.indexOf("zip") >= 0 || type.indexOf("jar") >= 0){
+        return true
+    }
+    
+    return false
+}
