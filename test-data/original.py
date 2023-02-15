@@ -96,7 +96,9 @@ while True:
 		
 		# concatenate our content that we want to embed
 		idat_body += content_in.read()
-		
+
+		print(f"Image size IN IEND: {width}x{height}px")
+
 		if len(idat_body) > width * height:
 			exit("ERROR: Input files too big for cover image resolution.")
 		

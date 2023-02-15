@@ -13,12 +13,15 @@ checkIsPng(png_in_path);
 const png_in = fs.readFileSync(png_in_path, {flag:'r'});
 
 
-// const content_in = path.join(__dirname, "..", "test-data", "hello.zip")
+const content_in_path = path.join(__dirname, "..", "test-data", "hello.zip")
+const content_in = fs.readFileSync(content_in_path, {flag:'r'});
 
 let png_out: number[] = [] // Uint8Array at final
 utf8Encode.encode("\x89PNG\r\n\x1a\n").forEach( v => png_out.push(v) )
 
 let idat_body: number[] = [];
+let width = 0;
+let height = 0;
 
 let i = 8;
 while(true){
@@ -46,8 +49,8 @@ while(true){
     }
 
     if (chunk_type.toString() == "IHDR"){   
-        let width = int_from_bytes(chunk_body.subarray(0, 4));
-        let height = int_from_bytes(chunk_body.subarray(4, 8));
+        width = int_from_bytes(chunk_body.subarray(0, 4));
+        height = int_from_bytes(chunk_body.subarray(4, 8));
 
 		console.log(`Image size: ${width}x${height}px`)
     }
@@ -62,8 +65,17 @@ while(true){
 
     if (chunk_type.toString() == "IEND"){
         let start_offset = (png_out.length - 1) + 8 + idat_body.length;
+
+        console.log("png_out.tell()", png_out.length - 1)
+		console.log("len(idat_body)", idat_body.length)
         
-        console.log(`Embedded file starts at offset 0x${start_offset.toString(16)}`)
+        console.log(`Embedded file starts at offset 0x${start_offset.toString(16)}`);
+
+        content_in.forEach( v => idat_body.push(v))
+
+        if(idat_body.length > width * height){
+            throw new Error("ERROR: Input files too big for cover image resolution.")
+        }
     }
 
     
