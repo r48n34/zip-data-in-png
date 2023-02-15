@@ -88,6 +88,10 @@ while True:
 	# chunk, before we actually write the IEND chunk
 	if chunk_type == b"IEND":
 		start_offset = png_out.tell()+8+len(idat_body)
+
+		print("png_out.tell()", png_out.tell())
+		print("len(idat_body)", len(idat_body))
+
 		print("Embedded file starts at offset", hex(start_offset))
 		
 		# concatenate our content that we want to embed

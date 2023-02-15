@@ -18,7 +18,7 @@ const png_in = fs.readFileSync(png_in_path, {flag:'r'});
 let png_out: number[] = [] // Uint8Array at final
 utf8Encode.encode("\x89PNG\r\n\x1a\n").forEach( v => png_out.push(v) )
 
-// let idat_body: number[] = []
+let idat_body: number[] = [];
 
 let i = 8;
 while(true){
@@ -39,8 +39,8 @@ while(true){
 
     if(["IHDR", "PLTE", "IDAT", "IEND"].indexOf(chunk_type.toString()) === -1){
         console.log("Warning: dropping non-essential or unknown chunk:", chunk_type.toString());
+        
         i = (i + 8 + chunk_len + 4);
-
         console.log("-----------------");
 		continue
     }
@@ -52,10 +52,29 @@ while(true){
 		console.log(`Image size: ${width}x${height}px`)
     }
 
+    if (chunk_type.toString() == "IDAT"){  
+        chunk_body.forEach( v => idat_body.push(v) )
+
+        i = (i + 8 + chunk_len + 4);
+        console.log("-----------------");
+		continue
+    }
+
+    if (chunk_type.toString() == "IEND"){
+        let start_offset = (png_out.length - 1) + 8 + idat_body.length;
+        
+        console.log(`Embedded file starts at offset 0x${start_offset.toString(16)}`)
+    }
+
     
     if (chunk_type.toString() == "IEND"){
         break
     }
+
+    chunk_len_raw.forEach( v => png_out.push(v))
+    chunk_type.forEach( v => png_out.push(v))
+    chunk_body.forEach( v => png_out.push(v))
+    chunk_csum_raw.forEach( v => png_out.push(v))
     
     i = (i + 8 + chunk_len + 4);
     
