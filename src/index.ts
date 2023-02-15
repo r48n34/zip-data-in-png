@@ -37,20 +37,20 @@ while(true){
 
     if(["IHDR", "PLTE", "IDAT", "IEND"].indexOf(chunk_type.toString()) === -1){
         console.log("Warning: dropping non-essential or unknown chunk:", chunk_type.toString());
-        i = (i + 8 + chunk_len + 4)
+        i = (i + 8 + chunk_len + 4);
+
+        console.log("-----------------");
 		continue
     }
 
-    console.log("-----------------");
     
-
-
-
     if (chunk_type.toString() == "IEND"){
         break
     }
-
-    i = (i + 8 + chunk_len + 4)
+    
+    i = (i + 8 + chunk_len + 4);
+    
+    console.log("-----------------");
     // break;
 }
 
