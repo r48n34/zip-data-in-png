@@ -82,12 +82,14 @@ while(true){
             console.log("Fixing up zip offsets...")
         }
 
-        len_to_bytes(idat_body.length).forEach( v => png_out.push(v))
-        utf8Encode.encode("IDAT").forEach( v => png_out.push(v) )
-        idat_body.forEach( v => png_out.push(v) )
+        len_to_bytes(idat_body.length).forEach( v => png_out.push(v)) // png_out.write(len(idat_body).to_bytes(4, "big"))
+        utf8Encode.encode("IDAT").forEach( v => png_out.push(v) ) // png_out.write(b"IDAT")
+        idat_body.forEach( v => png_out.push(v) ) // png_out.write(idat_body)
 
         let buffTemp = new Buffer([...utf8Encode.encode("IDAT"), ...idat_body])
         console.log("zlib.crc32", crc32.unsigned(buffTemp));
+
+        len_to_bytes(crc32.unsigned(buffTemp)).forEach( v => png_out.push(v) ) // zlib.crc32
         
     }
 
