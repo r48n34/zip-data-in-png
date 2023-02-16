@@ -4,7 +4,7 @@ import crc32 from "buffer-crc32"
 // import FileType from 'file-type';
 
 import { checkIsPng, checkIsZip } from "./utilis/checkIsPng";
-import { endCentralDirOffsetRindex, int_from_bytes, len_to_bytes, len_to_bytes_little } from "./utilis/bufferHelper";
+import { endCentralDirOffsetRindex, int_from_bytes, len_to_bytes, len_to_bytes_little, unpack_from_H } from "./utilis/bufferHelper";
 
 export function zipDataInPng(originalPngPath: string, inputContentPath: string, outputPath: string){
 
@@ -87,12 +87,18 @@ export function zipDataInPng(originalPngPath: string, inputContentPath: string, 
                 console.log("cl_range", cl_range);
 
                 console.log("data[cl_range]", idat_body[cl_range[0]], idat_body[cl_range[1]])
+                console.log("data length", idat_body.length)
 
-                console.log("bigIntFromBytesLE", len_to_bytes_little(comment_length, 2));
+                const byteArr = len_to_bytes_little(comment_length, 2);
+                idat_body[cl_range[0]] = byteArr[0]
+                idat_body[cl_range[1]] = byteArr[1]
+
+                console.log("data[cl_range] After", idat_body[cl_range[0]], idat_body[cl_range[1]])
+
+                // find the number of central directory entries
+                let cdent_count = unpack_from_H(idat_body, end_central_dir_offset + 10)
+                console.log("cdent_count", cdent_count)
                 
-                
-
-
                 
             }
     

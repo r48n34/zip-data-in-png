@@ -16,6 +16,21 @@ export function len_to_bytes_little(num: number, bytesCount: number = 4){
     return len_to_bytes(num).reverse().filter( (_, i) => i < bytesCount)
 }
 
+export function unpack_from_H(data:number[], offset: number){
+    console.log("INFO:", data.length, offset)
+    
+    let count = 0;
+    for(let i = offset; i < data.length; i ++){
+        console.log(data[i]);
+        
+        if(data[i] === 60 && data[i + 1] === 72){
+            count += 1;
+        }
+    }
+
+    return count
+}
+
 
 export function endCentralDirOffsetRindex(data: number[]){
     
