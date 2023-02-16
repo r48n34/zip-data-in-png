@@ -34,7 +34,7 @@ export function zipDataInPng(originalPngPath: string, inputContentPath: string, 
     
         console.log("chunk_len:", chunk_len)
         console.log("chunk_type:", chunk_type.toString())
-        console.log("chunk_body:", chunk_body)
+        // console.log("chunk_body:", chunk_body)
         console.log("chunk_csum:", chunk_csum)
     
         if(["IHDR", "PLTE", "IDAT", "IEND"].indexOf(chunk_type.toString()) === -1){
@@ -61,9 +61,9 @@ export function zipDataInPng(originalPngPath: string, inputContentPath: string, 
         }
     
         if (chunk_type.toString() == "IEND"){
-            let start_offset = (png_out.length - 1) + 8 + idat_body.length;
+            let start_offset = png_out.length + 8 + idat_body.length;
     
-            console.log("png_out.tell()", png_out.length - 1)
+            console.log("png_out.tell()", png_out.length)
             console.log("len(idat_body)", idat_body.length)
             
             console.log(`Embedded file starts at offset 0x${start_offset.toString(16)}`);
@@ -76,6 +76,23 @@ export function zipDataInPng(originalPngPath: string, inputContentPath: string, 
     
             if(checkIsZip(inputContentPath)){
                 console.log("Fixing up zip offsets...")
+                let a = [ 80, 75, 5, 6 ] // utf8Encode.encode("PK\x05\x06")
+                console.log(a);
+                
+                let end_central_dir_offset = 0;
+                for(let i = 0; i < idat_body.length; i ++){
+                    if(
+                        idat_body[i] === 80
+                        && idat_body[i + 1] === 75
+                        && idat_body[i + 2] === 5
+                        && idat_body[i + 3] === 6
+                    ){
+                        end_central_dir_offset = i;
+                        break;
+                    }
+                }
+                console.log(end_central_dir_offset);
+                
             }
     
             len_to_bytes(idat_body.length).forEach( v => png_out.push(v)) // png_out.write(len(idat_body).to_bytes(4, "big"))
@@ -88,7 +105,6 @@ export function zipDataInPng(originalPngPath: string, inputContentPath: string, 
             len_to_bytes(crc32.unsigned(buffTemp)).forEach( v => png_out.push(v) ) // zlib.crc32
         }
     
-        
         
         chunk_len_raw.forEach( v => png_out.push(v))
         chunk_type.forEach( v => png_out.push(v))
@@ -109,7 +125,7 @@ export function zipDataInPng(originalPngPath: string, inputContentPath: string, 
 ( async () => {
     zipDataInPng(
         path.join(__dirname, "..", "test-data", "deno.png"),
-        path.join(__dirname, "..", "test-data", "book.pdf"),
+        path.join(__dirname, "..", "test-data", "hello.zip"),
         path.join(__dirname, "..", "test-data", "helloResultJs.png"),
     )
 })()

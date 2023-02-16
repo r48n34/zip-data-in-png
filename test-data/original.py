@@ -13,6 +13,7 @@ def fixup_zip(data, start_offset):
 
 	# find the "end of central directory" marker
 	end_central_dir_offset = data.rindex(b"PK\x05\x06")
+	print("end_central_dir_offset", end_central_dir_offset)
 	
 	# adjust comment length so that any trailing data (i.e. PNG IEND)
 	# is part of the comment
@@ -64,7 +65,7 @@ while True:
 
 	print("chunk_len:", chunk_len)
 	print("chunk_type:", chunk_type)
-	print("chunk_body:", chunk_body)
+	# print("chunk_body:", chunk_body)
 	print("chunk_csum:", chunk_csum)
 	
 	
@@ -96,8 +97,6 @@ while True:
 		
 		# concatenate our content that we want to embed
 		idat_body += content_in.read()
-
-		print(f"Image size IN IEND: {width}x{height}px")
 
 		if len(idat_body) > width * height:
 			exit("ERROR: Input files too big for cover image resolution.")
