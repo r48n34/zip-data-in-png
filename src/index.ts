@@ -96,10 +96,7 @@ export async function zipDataInPng(originalPngPath: string, inputContentPath: st
                 console.log("data[cl_range] After", idat_body[cl_range[0]], idat_body[cl_range[1]])
 
                 // find the number of central directory entries
-                await zipfileGetCounter(inputContentPath)
-                // console.log(aa);
-                
-                let cdent_count = unpack_from_H(idat_body, end_central_dir_offset + 10)
+                let cdent_count = zipfileGetCounter(inputContentPath) 
                 console.log("cdent_count", cdent_count)
                 
             }

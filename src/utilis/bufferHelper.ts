@@ -1,15 +1,11 @@
-import yauzl from "yauzl"
+import AdmZip from "adm-zip"
 
 export function zipfileGetCounter(zipFile: string){
-    return new Promise( rec => {
-        yauzl.open(zipFile, {lazyEntries: true}, function(err, zipfile) {
-            zipfile.readEntry();
-            zipfile.on("entry", function(entry) {
-                console.log("entry FUNC", entry);
-                rec(entry)
-            })
-        })
-    })
+    const zip = new AdmZip(zipFile);
+    const zipEntries = zip.getEntries(); // an array of ZipEntry records
+
+    console.log(zipEntries);
+    return zipEntries.length
 }
 
 // https://stackoverflow.com/questions/54257476/is-there-any-function-in-js-like-this-int-from-bytes-in-python

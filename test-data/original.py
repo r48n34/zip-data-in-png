@@ -1,6 +1,6 @@
+import sys
 import zlib
 from struct import unpack_from
-import sys
 
 PNG_MAGIC = b"\x89PNG\r\n\x1a\n"
 
@@ -144,4 +144,4 @@ png_in.close()
 content_in.close()
 png_out.close()
 
-# python original.py deno.png book.pdf helloResultPython.png
+# python original.py deno.png hello.zip helloResultPython.png
