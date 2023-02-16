@@ -4,7 +4,7 @@ import crc32 from "buffer-crc32"
 // import FileType from 'file-type';
 
 import { checkIsPng, checkIsZip } from "./utilis/checkIsPng";
-import { int_from_bytes, len_to_bytes } from "./utilis/bufferHelper";
+import { endCentralDirOffsetRindex, int_from_bytes, len_to_bytes } from "./utilis/bufferHelper";
 
 export function zipDataInPng(originalPngPath: string, inputContentPath: string, outputPath: string){
 
@@ -79,19 +79,9 @@ export function zipDataInPng(originalPngPath: string, inputContentPath: string, 
                 let a = [ 80, 75, 5, 6 ] // utf8Encode.encode("PK\x05\x06")
                 console.log(a);
                 
-                let end_central_dir_offset = 0;
-                for(let i = 0; i < idat_body.length; i ++){
-                    if(
-                        idat_body[i] === 80
-                        && idat_body[i + 1] === 75
-                        && idat_body[i + 2] === 5
-                        && idat_body[i + 3] === 6
-                    ){
-                        end_central_dir_offset = i;
-                        break;
-                    }
-                }
-                console.log(end_central_dir_offset);
+                let end_central_dir_offset = endCentralDirOffsetRindex(idat_body);
+                console.log("end_central_dir_offset", end_central_dir_offset);
+                
                 
             }
     

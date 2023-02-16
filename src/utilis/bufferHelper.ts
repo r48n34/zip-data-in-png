@@ -12,3 +12,20 @@ export function len_to_bytes(num: number, bytesCount: number = 4){
     // console.log(data);
     return data
 }
+
+export function endCentralDirOffsetRindex(data: number[]){
+    
+    for(let i = 0; i < data.length; i ++){
+        if(
+            data[i] === 80
+            && data[i + 1] === 75
+            && data[i + 2] === 5
+            && data[i + 3] === 6
+        ){
+           
+            return i
+        }
+    }
+
+    return -1
+}
