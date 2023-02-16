@@ -1,3 +1,17 @@
+import yauzl from "yauzl"
+
+export function zipfileGetCounter(zipFile: string){
+    return new Promise( rec => {
+        yauzl.open(zipFile, {lazyEntries: true}, function(err, zipfile) {
+            zipfile.readEntry();
+            zipfile.on("entry", function(entry) {
+                console.log("entry FUNC", entry);
+                rec(entry)
+            })
+        })
+    })
+}
+
 // https://stackoverflow.com/questions/54257476/is-there-any-function-in-js-like-this-int-from-bytes-in-python
 export function int_from_bytes(bufferArray: Buffer){
     return bufferArray.readUInt32BE(0)
@@ -20,14 +34,13 @@ export function unpack_from_H(data:number[], offset: number){
     console.log("INFO:", data.length, offset)
     
     let count = 0;
-    for(let i = offset; i < data.length; i ++){
-        console.log(data[i]);
-        
-        if(data[i] === 60 && data[i + 1] === 72){
-            count += 1;
-        }
-    }
 
+    let d:number[] = []
+
+    for(let i = offset; i < data.length; i ++){
+        d.push(data[i]);
+    }
+    console.log(d)
     return count
 }
 

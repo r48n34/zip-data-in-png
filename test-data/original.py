@@ -31,7 +31,7 @@ def fixup_zip(data, start_offset):
 	# find the number of central directory entries
 	print("INFO:", len(data), end_central_dir_offset+10)
 	cdent_count = unpack_from("<H", data, end_central_dir_offset+10)[0]
-	print("INFO Data:", data)
+	# print("INFO Data:", data)
 
 	print("unpack_from cdent_count", unpack_from("<H", data, end_central_dir_offset+10))
 	print("cdent_count", cdent_count)

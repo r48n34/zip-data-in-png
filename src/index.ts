@@ -4,9 +4,9 @@ import crc32 from "buffer-crc32"
 // import FileType from 'file-type';
 
 import { checkIsPng, checkIsZip } from "./utilis/checkIsPng";
-import { endCentralDirOffsetRindex, int_from_bytes, len_to_bytes, len_to_bytes_little, unpack_from_H } from "./utilis/bufferHelper";
+import { endCentralDirOffsetRindex, int_from_bytes, len_to_bytes, len_to_bytes_little, unpack_from_H, zipfileGetCounter } from "./utilis/bufferHelper";
 
-export function zipDataInPng(originalPngPath: string, inputContentPath: string, outputPath: string){
+export async function zipDataInPng(originalPngPath: string, inputContentPath: string, outputPath: string){
 
     let utf8Encode = new TextEncoder();
     checkIsPng(originalPngPath);
@@ -96,9 +96,11 @@ export function zipDataInPng(originalPngPath: string, inputContentPath: string, 
                 console.log("data[cl_range] After", idat_body[cl_range[0]], idat_body[cl_range[1]])
 
                 // find the number of central directory entries
+                await zipfileGetCounter(inputContentPath)
+                // console.log(aa);
+                
                 let cdent_count = unpack_from_H(idat_body, end_central_dir_offset + 10)
                 console.log("cdent_count", cdent_count)
-                
                 
             }
     
@@ -130,7 +132,7 @@ export function zipDataInPng(originalPngPath: string, inputContentPath: string, 
 }
 
 ( async () => {
-    zipDataInPng(
+    await zipDataInPng(
         path.join(__dirname, "..", "test-data", "deno.png"),
         path.join(__dirname, "..", "test-data", "hello.zip"),
         path.join(__dirname, "..", "test-data", "helloResultJs.png"),
