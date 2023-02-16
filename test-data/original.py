@@ -29,16 +29,21 @@ def fixup_zip(data, start_offset):
 	print("data[cl_range] After", data[cl_range])
 	
 	# find the number of central directory entries
-	print("INFO:", len(data), end_central_dir_offset+10)
+	# print("INFO:", len(data), end_central_dir_offset+10)
 	cdent_count = unpack_from("<H", data, end_central_dir_offset+10)[0]
 	# print("INFO Data:", data)
 
-	print("unpack_from cdent_count", unpack_from("<H", data, end_central_dir_offset+10))
-	print("cdent_count", cdent_count)
+	# print("unpack_from cdent_count", unpack_from("<H", data, end_central_dir_offset+10))
+	# print("cdent_count", cdent_count)
 	
 	# find the offset of the central directory entries, and fix it
 	cd_range = slice(end_central_dir_offset+16, end_central_dir_offset+16+4)
+	# print("cd_range", cd_range)
+	# print("data[cd_range]", data[cd_range][0], data[cd_range][1], data[cd_range][2], data[cd_range][3])
+
 	central_dir_start_offset = int.from_bytes(data[cd_range], "little")
+	# print("central_dir_start_offset", central_dir_start_offset)
+
 	data[cd_range] = (central_dir_start_offset + start_offset).to_bytes(4, "little")
 	
 	# iterate over the central directory entries
@@ -47,6 +52,8 @@ def fixup_zip(data, start_offset):
 		
 		# fix the offset that points to the local file header
 		off_range = slice(central_dir_start_offset+42, central_dir_start_offset+42+4)
+		# print("data[off_range]", data[off_range])
+
 		off = int.from_bytes(data[off_range], "little")
 		data[off_range] = (off + start_offset).to_bytes(4, "little")
 		
@@ -120,12 +127,12 @@ while True:
 			fixup_zip(idat_body, start_offset)
 		
 		# write the IDAT chunk
-		print("len(idat_body).to_bytes", len(idat_body).to_bytes(4, "big"))
+		# print("len(idat_body).to_bytes", len(idat_body).to_bytes(4, "big"))
 		png_out.write(len(idat_body).to_bytes(4, "big"))
 		png_out.write(b"IDAT")
 		png_out.write(idat_body)
 
-		print("zlib.crc32", zlib.crc32(b"IDAT" + idat_body))
+		# print("zlib.crc32", zlib.crc32(b"IDAT" + idat_body))
 		png_out.write(zlib.crc32(b"IDAT" + idat_body).to_bytes(4, "big"))
 	
 	# if we reached here, we're writing the IHDR, PLTE or IEND chunk

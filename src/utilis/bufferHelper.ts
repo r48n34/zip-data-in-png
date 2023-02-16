@@ -4,13 +4,20 @@ export function zipfileGetCounter(zipFile: string){
     const zip = new AdmZip(zipFile);
     const zipEntries = zip.getEntries(); // an array of ZipEntry records
 
-    console.log(zipEntries);
+    // console.log(zipEntries);
     return zipEntries.length
 }
 
 // https://stackoverflow.com/questions/54257476/is-there-any-function-in-js-like-this-int-from-bytes-in-python
-export function int_from_bytes(bufferArray: Buffer){
+export function int_from_bytes(bufferArray: Buffer): number{
     return bufferArray.readUInt32BE(0)
+}
+
+export function int_from_bytes_little(bufferArray: Buffer): number{
+    let sum = 0;
+    bufferArray.forEach( (v,i) => sum += v * 256** bufferArray.length - i );
+
+    return sum
 }
 
 export function len_to_bytes(num: number){
@@ -27,7 +34,7 @@ export function len_to_bytes_little(num: number, bytesCount: number = 4){
 }
 
 export function unpack_from_H(data:number[], offset: number){
-    console.log("INFO:", data.length, offset)
+    // console.log("INFO:", data.length, offset)
     
     let count = 0;
 
@@ -36,7 +43,7 @@ export function unpack_from_H(data:number[], offset: number){
     for(let i = offset; i < data.length; i ++){
         d.push(data[i]);
     }
-    console.log(d)
+    // console.log(d)
     return count
 }
 
