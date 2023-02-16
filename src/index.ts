@@ -90,11 +90,11 @@ export async function zipDataInPng(originalPngPath: string, inputContentPath: st
                 let comment_length = (idat_body.length - end_central_dir_offset) - 22 + 0x10;
                 console.log("comment_length", comment_length);
 
-                const cl_range = [end_central_dir_offset + 20, end_central_dir_offset + 20 + 2]
+                let cl_range = [end_central_dir_offset + 20, end_central_dir_offset + 20 + 2]
                 console.log("cl_range", cl_range);
 
                 console.log("data[cl_range]", idat_body[cl_range[0]], idat_body[cl_range[1]])
-                // console.log("data length", idat_body.length)
+                console.log("data length", idat_body.length)
 
                 // const byteArr = len_to_bytes_little(comment_length, 2);
                 // idat_body[cl_range[0]] = byteArr[0]
