@@ -18,8 +18,14 @@ def fixup_zip(data, start_offset):
 	# adjust comment length so that any trailing data (i.e. PNG IEND)
 	# is part of the comment
 	comment_length = (len(data)-end_central_dir_offset) - 22 + 0x10
-	cl_range = slice(end_central_dir_offset+20, end_central_dir_offset+20+2)
+	print("comment_length", comment_length)
+
+	cl_range = slice(end_central_dir_offset + 20, end_central_dir_offset + 20 +  2)
+	print("cl_range", cl_range)
+
+	print("data[cl_range]", data[cl_range])
 	data[cl_range] = comment_length.to_bytes(2, "little")
+	print("data[cl_range] After", data[cl_range])
 	
 	# find the number of central directory entries
 	cdent_count = unpack_from("<H", data, end_central_dir_offset+10)[0]

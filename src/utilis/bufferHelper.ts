@@ -3,15 +3,19 @@ export function int_from_bytes(bufferArray: Buffer){
     return bufferArray.readUInt32BE(0)
 }
 
-export function len_to_bytes(num: number, bytesCount: number = 4){
-    let b = new ArrayBuffer(bytesCount);
+export function len_to_bytes(num: number){
+    let b = new ArrayBuffer(4);
     new DataView(b).setUint32(0, num);
 
     const data = Array.from(new Uint8Array(b));
 
-    // console.log(data);
     return data
 }
+
+export function len_to_bytes_little(num: number, bytesCount: number = 4){
+    return len_to_bytes(num).reverse().filter( (_, i) => i < bytesCount)
+}
+
 
 export function endCentralDirOffsetRindex(data: number[]){
     
