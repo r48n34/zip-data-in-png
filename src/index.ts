@@ -7,10 +7,10 @@ import { checkIsPng, checkIsZip } from "./utilis/checkIsPng";
 import { 
     endCentralDirOffsetRindex,
     int_from_bytes,
-    // int_from_bytes_little,
+    int_from_bytes_little,
     len_to_bytes,
-    // len_to_bytes_little,
-    // zipfileGetCounter
+    len_to_bytes_little,
+    zipfileGetCounter,
 } from "./utilis/bufferHelper";
 
 export async function zipDataInPng(originalPngPath: string, inputContentPath: string, outputPath: string){
@@ -89,33 +89,50 @@ export async function zipDataInPng(originalPngPath: string, inputContentPath: st
                 
                 let comment_length = (idat_body.length - end_central_dir_offset) - 22 + 0x10;
                 console.log("comment_length", comment_length);
-
+                
                 let cl_range = [end_central_dir_offset + 20, end_central_dir_offset + 20 + 2]
                 console.log("cl_range", cl_range);
-
+                
+                
                 console.log("data[cl_range]", idat_body[cl_range[0]], idat_body[cl_range[1]])
                 console.log("data length", idat_body.length)
+                
+                const byteArr = len_to_bytes_little(comment_length, 2);
+                idat_body[cl_range[0]] = byteArr[0]
+                idat_body[cl_range[0] + 1] = byteArr[1]
+                
+                console.log("data[cl_range] After 1", idat_body[62660])
+                console.log("data[cl_range] After 2", idat_body[62661])
 
-                // const byteArr = len_to_bytes_little(comment_length, 2);
-                // idat_body[cl_range[0]] = byteArr[0]
-                // idat_body[cl_range[1]] = byteArr[1]
-
-
-
+                console.log("After LENGTH:", idat_body.length)
+                
                 // console.log("data[cl_range] After", idat_body[cl_range[0]], idat_body[cl_range[1]])
 
-                // // find the number of central directory entries
-                // let cdent_count = zipfileGetCounter(inputContentPath) 
-                // console.log("cdent_count", cdent_count)
+                // find the number of central directory entries
+                let cdent_count = zipfileGetCounter(inputContentPath) 
+                console.log("cdent_count", cdent_count)
 
-                // // find the offset of the central directory entries, and fix it
-                // let cd_range = [end_central_dir_offset + 16, end_central_dir_offset + 16 + 4]
-                // console.log("cd_range", cd_range);
+                // find the offset of the central directory entries, and fix it
+                let cd_range = [end_central_dir_offset + 16, end_central_dir_offset + 16 + 4]
+                console.log("cd_range", cd_range);
 
-                // console.log("cd_range", idat_body[cd_range[0]], idat_body[cd_range[1]]);
+                console.log(
+                    "cd_range",
+                    idat_body[cd_range[0]],
+                    idat_body[cd_range[0] + 1],
+                    idat_body[cd_range[0] + 2],
+                    idat_body[cd_range[0] + 3],
+                );
                 
-                // let central_dir_start_offset = int_from_bytes_little(Buffer.from([0, 0, idat_body[cd_range[0]], idat_body[cd_range[1]]]))
-                // console.log("central_dir_start_offset", central_dir_start_offset);
+                let central_dir_start_offset = int_from_bytes_little(
+                    Buffer.from([
+                        idat_body[cd_range[0]    ],
+                        idat_body[cd_range[0] + 1],
+                        idat_body[cd_range[0] + 2],
+                        idat_body[cd_range[0] + 3]
+                    ])
+                )
+                console.log("central_dir_start_offset", central_dir_start_offset);
                 
             }
     

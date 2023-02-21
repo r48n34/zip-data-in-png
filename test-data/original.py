@@ -26,23 +26,26 @@ def fixup_zip(data, start_offset):
 	print("data[cl_range]", data[cl_range])
 	print("data length", len(data))
 	data[cl_range] = comment_length.to_bytes(2, "little")
-	print("data[cl_range] After", data[cl_range])
+
+	print("After LENGTH:", data[cl_range])
+	print("data[cl_range] After 1", data[62660])
+	print("data[cl_range] After 2", data[62661])
 	
 	# find the number of central directory entries
 	# print("INFO:", len(data), end_central_dir_offset+10)
 	cdent_count = unpack_from("<H", data, end_central_dir_offset+10)[0]
 	# print("INFO Data:", data)
 
-	# print("unpack_from cdent_count", unpack_from("<H", data, end_central_dir_offset+10))
-	# print("cdent_count", cdent_count)
+	print("unpack_from cdent_count", unpack_from("<H", data, end_central_dir_offset+10))
+	print("cdent_count", cdent_count)
 	
 	# find the offset of the central directory entries, and fix it
 	cd_range = slice(end_central_dir_offset+16, end_central_dir_offset+16+4)
-	# print("cd_range", cd_range)
-	# print("data[cd_range]", data[cd_range][0], data[cd_range][1], data[cd_range][2], data[cd_range][3])
+	print("cd_range", cd_range)
+	print("data[cd_range]", data[cd_range][0], data[cd_range][1], data[cd_range][2], data[cd_range][3])
 
 	central_dir_start_offset = int.from_bytes(data[cd_range], "little")
-	# print("central_dir_start_offset", central_dir_start_offset)
+	print("central_dir_start_offset", central_dir_start_offset)
 
 	data[cd_range] = (central_dir_start_offset + start_offset).to_bytes(4, "little")
 	

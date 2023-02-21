@@ -14,10 +14,10 @@ export function int_from_bytes(bufferArray: Buffer): number{
 }
 
 export function int_from_bytes_little(bufferArray: Buffer): number{
-    let sum = 0;
-    bufferArray.forEach( (v,i) => sum += v * 256** bufferArray.length - i );
+    let reverseArr = bufferArray.reverse();
 
-    return sum
+    const buf = Buffer.from(reverseArr)
+    return buf.readUInt32BE(0)
 }
 
 export function len_to_bytes(num: number){
