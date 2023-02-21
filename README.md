@@ -13,7 +13,7 @@ IDK
 
 ```js
 import path from "path";
-import { zipDataInPng } from 'zipDataInPng.js';
+import { zipDataInPng } from 'zipDataInPng';
 
 zipDataInPng (
     path.join(__dirname, "deno.png"),  // Original data
