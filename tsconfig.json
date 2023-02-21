@@ -23,6 +23,7 @@
     ],
     "exclude": [
         "test",
+        "test-data",
         "node_modules",
         "test-data",
         "dist",

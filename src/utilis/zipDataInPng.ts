@@ -12,7 +12,21 @@ import {
     zipfileGetCounter,
 } from "./bufferHelper";
 
-export function zipDataInPng(originalPngPath: string, inputContentPath: string, outputPath: string){
+interface zipDataInPngOptions {
+    quiet: boolean
+}
+
+export function zipDataInPng(
+    originalPngPath: string,
+    inputContentPath: string,
+    outputPath: string,
+    option?: zipDataInPngOptions
+){
+
+    let finalOptions = {
+        quiet: true,
+        ...option
+    }
 
     let utf8Encode = new TextEncoder();
     checkIsPng(originalPngPath);
@@ -38,7 +52,7 @@ export function zipDataInPng(originalPngPath: string, inputContentPath: string, 
         // let chunk_csum = int_from_bytes( chunk_csum_raw )
     
         if(["IHDR", "PLTE", "IDAT", "IEND"].indexOf(chunk_type.toString()) === -1){
-            console.log("Warning: dropping non-essential or unknown chunk:", chunk_type.toString());
+            !finalOptions.quiet && console.log("Warning: dropping non-essential or unknown chunk:", chunk_type.toString());
             
             i = (i + 8 + chunk_len + 4);
             continue
@@ -48,7 +62,7 @@ export function zipDataInPng(originalPngPath: string, inputContentPath: string, 
             width = int_from_bytes(chunk_body.subarray(0, 4));
             height = int_from_bytes(chunk_body.subarray(4, 8));
     
-            console.log(`Image size: ${width} x ${height}px`)
+            !finalOptions.quiet && console.log(`Image size: ${width} x ${height}px`)
         }
     
         if (chunk_type.toString() == "IDAT"){  
@@ -138,12 +152,11 @@ export function zipDataInPng(originalPngPath: string, inputContentPath: string, 
             idat_body.forEach( v => png_out.push(v) ) // png_out.write(idat_body)
     
             let buffTemp = Buffer.from([...utf8Encode.encode("IDAT"), ...idat_body])
-            console.log("zlib.crc32", crc32.unsigned(buffTemp));
+            // console.log("zlib.crc32", crc32.unsigned(buffTemp)); // Debug number, important
     
             len_to_bytes(crc32.unsigned(buffTemp)).forEach( v => png_out.push(v) ) // zlib.crc32
         }
-    
-        
+     
         chunk_len_raw.forEach( v => png_out.push(v))
         chunk_type.forEach( v => png_out.push(v))
         chunk_body.forEach( v => png_out.push(v))
@@ -157,6 +170,7 @@ export function zipDataInPng(originalPngPath: string, inputContentPath: string, 
     }
     
     fs.writeFileSync(outputPath, Uint8Array.from(png_out));
+    !finalOptions.quiet && console.log(`Finish writing to: ${outputPath}`);
 
     return true
 }
