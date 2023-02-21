@@ -1,18 +1,21 @@
 {
   "name": "zip-data-in-png",
   "version": "1.0.0",
-  "description": "tweetable-polyglot-png in js",
+  "description": "tweetable-polyglot-png in node.js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "license": "MIT",
+  "author": "reemo",
   "scripts": {
     "start": "ts-node src/index.ts",
     "dev": "ts-node src/index.ts",
     "build": "tsc",
     "test": "jest --maxWorkers 2"
   },
+  "files": [
+    "/src"
+  ],
   "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "@types/adm-zip": "^0.5.0",
     "@types/buffer-crc32": "^0.2.2",
