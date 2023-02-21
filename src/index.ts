@@ -134,6 +134,19 @@ export async function zipDataInPng(originalPngPath: string, inputContentPath: st
                 )
                 console.log("central_dir_start_offset", central_dir_start_offset);
                 
+                const byteArrRange = len_to_bytes_little(
+                    central_dir_start_offset + start_offset,
+                    4
+                );
+
+                idat_body[cd_range[0]] = byteArrRange[0]
+                idat_body[cd_range[0] + 1] = byteArrRange[1]
+                idat_body[cd_range[0] + 2] = byteArrRange[2]
+                idat_body[cd_range[0] + 3] = byteArrRange[3]
+                console.log("byteArrRange", byteArrRange);
+
+                console.log("byteArrRange", idat_body[62656])
+                
             }
     
             len_to_bytes(idat_body.length).forEach( v => png_out.push(v)) // png_out.write(len(idat_body).to_bytes(4, "big"))

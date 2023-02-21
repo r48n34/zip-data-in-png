@@ -47,8 +47,10 @@ def fixup_zip(data, start_offset):
 	central_dir_start_offset = int.from_bytes(data[cd_range], "little")
 	print("central_dir_start_offset", central_dir_start_offset)
 
+
 	data[cd_range] = (central_dir_start_offset + start_offset).to_bytes(4, "little")
-	
+	print("byteArrRange", data[62656])
+
 	# iterate over the central directory entries
 	for _ in range(cdent_count):
 		central_dir_start_offset = data.index(b"PK\x01\x02", central_dir_start_offset)
