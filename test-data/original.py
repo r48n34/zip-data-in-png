@@ -55,11 +55,16 @@ def fixup_zip(data, start_offset):
 	for _ in range(cdent_count):
 		central_dir_start_offset = data.index(b"PK\x01\x02", central_dir_start_offset)
 		
+		print("LOOP central_dir_start_offset", central_dir_start_offset)
+
 		# fix the offset that points to the local file header
 		off_range = slice(central_dir_start_offset+42, central_dir_start_offset+42+4)
-		# print("data[off_range]", data[off_range])
+		print("data[off_range]", data[off_range])
 
 		off = int.from_bytes(data[off_range], "little")
+		print("OFF", off)
+
+		print("byteArrOff", (off + start_offset).to_bytes(4, "little"));
 		data[off_range] = (off + start_offset).to_bytes(4, "little")
 		
 		central_dir_start_offset += 1
@@ -132,12 +137,12 @@ while True:
 			fixup_zip(idat_body, start_offset)
 		
 		# write the IDAT chunk
-		# print("len(idat_body).to_bytes", len(idat_body).to_bytes(4, "big"))
+		print("len(idat_body).to_bytes", len(idat_body).to_bytes(4, "big"))
 		png_out.write(len(idat_body).to_bytes(4, "big"))
 		png_out.write(b"IDAT")
 		png_out.write(idat_body)
 
-		# print("zlib.crc32", zlib.crc32(b"IDAT" + idat_body))
+		print("zlib.crc32", zlib.crc32(b"IDAT" + idat_body))
 		png_out.write(zlib.crc32(b"IDAT" + idat_body).to_bytes(4, "big"))
 	
 	# if we reached here, we're writing the IHDR, PLTE or IEND chunk

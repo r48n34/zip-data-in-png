@@ -64,3 +64,19 @@ export function endCentralDirOffsetRindex(data: number[]){
 
     return -1
 }
+
+export function centralDirStartOffset(data: number[], offset: number){
+    for(let i = offset; i < data.length; i ++){
+        if(
+            data[i] === 80
+            && data[i + 1] === 75
+            && data[i + 2] === 1
+            && data[i + 3] === 2
+        ){
+           
+            return i
+        }
+    }
+
+    return -1
+}

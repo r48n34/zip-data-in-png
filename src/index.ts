@@ -5,6 +5,7 @@ import crc32 from "buffer-crc32"
 
 import { checkIsPng, checkIsZip } from "./utilis/checkIsPng";
 import { 
+    centralDirStartOffset,
     endCentralDirOffsetRindex,
     int_from_bytes,
     int_from_bytes_little,
@@ -146,6 +147,40 @@ export async function zipDataInPng(originalPngPath: string, inputContentPath: st
                 console.log("byteArrRange", byteArrRange);
 
                 console.log("byteArrRange", idat_body[62656])
+
+                for(let i = 0; i < cdent_count; i ++){
+                    central_dir_start_offset = centralDirStartOffset(idat_body, central_dir_start_offset);
+
+                    console.log("LOOP central_dir_start_offset", central_dir_start_offset)
+                    let off_range = [central_dir_start_offset + 42]
+
+                    let off = int_from_bytes_little(
+                        Buffer.from([
+                            idat_body[off_range[0]    ],
+                            idat_body[off_range[0] + 1],
+                            idat_body[off_range[0] + 2],
+                            idat_body[off_range[0] + 3]
+                        ])
+                    )
+
+                    console.log("OFF", off);
+
+                    const byteArrOff = len_to_bytes_little(
+                        off + start_offset,
+                        4
+                    );
+
+                    console.log("byteArrOff", byteArrOff);
+                    
+
+
+                    idat_body[off_range[0]] = byteArrOff[0]
+                    idat_body[off_range[0] + 1] = byteArrOff[1]
+                    idat_body[off_range[0] + 2] = byteArrOff[2]
+                    idat_body[off_range[0] + 3] = byteArrOff[3]
+
+                    central_dir_start_offset += 1
+                }
                 
             }
     
