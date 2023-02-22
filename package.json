@@ -1,6 +1,6 @@
 {
   "name": "zip-data-in-png",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "tweetable-polyglot-png in node.js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
