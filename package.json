@@ -6,6 +6,8 @@
   "types": "dist/index.d.ts",
   "license": "MIT",
   "author": "reemo",
+  "homepage": "https://github.com/r48n34/zip-data-in-png",
+  "repository": "https://github.com/r48n34/zip-data-in-png",
   "scripts": {
     "start": "ts-node src/index.ts",
     "dev": "ts-node src/index.ts",
@@ -15,7 +17,7 @@
   "files": [
     "dist/*"
   ],
-  "keywords": [],
+  "keywords": ["zip"],
   "devDependencies": {
     "@types/adm-zip": "^0.5.0",
     "@types/buffer-crc32": "^0.2.2",
