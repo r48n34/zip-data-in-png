@@ -1,6 +1,6 @@
 {
   "name": "zip-data-in-png",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "tweetable-polyglot-png in node.js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -13,7 +13,7 @@
     "test": "jest --maxWorkers 2"
   },
   "files": [
-    "/src"
+    "dist/*"
   ],
   "keywords": [],
   "devDependencies": {
