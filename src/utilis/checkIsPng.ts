@@ -5,7 +5,7 @@ export function checkIsPng(filePath: string): boolean{
     const type = filetype(fs.readFileSync(filePath)).map( v => v.typename )
 
     if(type.length === 0 || type.indexOf("png") === -1){
-        throw new Error("Assert Error: Tagret file is not a .png file.")
+        throw new Error("ASSERT ERROR: Input tagret file is not a .png file.")
     }
     
     return true

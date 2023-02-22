@@ -22,6 +22,9 @@ export function zipDataInPng(
     outputPath: string,
     option?: zipDataInPngOptions
 ){
+    if(originalPngPath === "" || inputContentPath === "" || outputPath === ""){
+        throw new Error("ERROR: Invalid input path")
+    }
 
     let finalOptions = {
         quiet: true,
@@ -34,7 +37,7 @@ export function zipDataInPng(
     const png_in = fs.readFileSync(originalPngPath, {flag:'r'});
     const content_in = fs.readFileSync(inputContentPath, {flag:'r'});
     
-    let png_out: number[] = [137, 80, 78, 71, 13, 10, 26, 10] // Uint8Array at final, png header
+    let png_out: number[] = [137, 80, 78, 71, 13, 10, 26, 10] // Uint8Array at final, png header at init
    
     let idat_body: number[] = [];
     let width = 0;
@@ -78,11 +81,11 @@ export function zipDataInPng(
             content_in.forEach( v => idat_body.push(v))
     
             if(idat_body.length > width * height){
-                throw new Error("[ERROR]: Input files too big for cover image resolution.")
+                throw new Error("ERROR: Input files too big for cover image resolution.")
             }
 
             if(!checkIsZip(inputContentPath)){
-                throw new Error("[ERROR]: Input content only accept .zip currently.")
+                throw new Error("ERROR: Input hidden content only accept .zip currently.")
             }
     
             const end_central_dir_offset = endCentralDirOffsetRindex(idat_body);
@@ -115,7 +118,7 @@ export function zipDataInPng(
                 4
             );
 
-            idat_body[cd_range[0]] = byteArrRange[0]
+            idat_body[cd_range[0]]     = byteArrRange[0]
             idat_body[cd_range[0] + 1] = byteArrRange[1]
             idat_body[cd_range[0] + 2] = byteArrRange[2]
             idat_body[cd_range[0] + 3] = byteArrRange[3]
@@ -139,7 +142,7 @@ export function zipDataInPng(
                     4
                 );
                 
-                idat_body[off_range[0]] = byteArrOff[0]
+                idat_body[off_range[0]]     = byteArrOff[0]
                 idat_body[off_range[0] + 1] = byteArrOff[1]
                 idat_body[off_range[0] + 2] = byteArrOff[2]
                 idat_body[off_range[0] + 3] = byteArrOff[3]
@@ -147,9 +150,9 @@ export function zipDataInPng(
                 central_dir_start_offset += 1
             }
                 
-            len_to_bytes(idat_body.length).forEach( v => png_out.push(v)) // png_out.write(len(idat_body).to_bytes(4, "big"))
-            utf8Encode.encode("IDAT").forEach( v => png_out.push(v) ) // png_out.write(b"IDAT")
-            idat_body.forEach( v => png_out.push(v) ) // png_out.write(idat_body)
+            len_to_bytes(idat_body.length).forEach( v => png_out.push(v)) 
+            utf8Encode.encode("IDAT").forEach( v => png_out.push(v) ) 
+            idat_body.forEach( v => png_out.push(v) ) 
     
             let buffTemp = Buffer.from([...utf8Encode.encode("IDAT"), ...idat_body])
             // console.log("zlib.crc32", crc32.unsigned(buffTemp)); // Debug number, important

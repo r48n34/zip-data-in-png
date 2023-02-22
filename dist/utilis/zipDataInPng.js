@@ -9,12 +9,15 @@ const buffer_crc32_1 = __importDefault(require("buffer-crc32"));
 const checkIsPng_1 = require("./checkIsPng");
 const bufferHelper_1 = require("./bufferHelper");
 function zipDataInPng(originalPngPath, inputContentPath, outputPath, option) {
+    if (originalPngPath === "" || inputContentPath === "" || outputPath === "") {
+        throw new Error("ERROR: Invalid input path");
+    }
     let finalOptions = Object.assign({ quiet: true }, option);
     let utf8Encode = new TextEncoder();
     (0, checkIsPng_1.checkIsPng)(originalPngPath);
     const png_in = fs_1.default.readFileSync(originalPngPath, { flag: 'r' });
     const content_in = fs_1.default.readFileSync(inputContentPath, { flag: 'r' });
-    let png_out = [137, 80, 78, 71, 13, 10, 26, 10]; // Uint8Array at final, png header
+    let png_out = [137, 80, 78, 71, 13, 10, 26, 10]; // Uint8Array at final, png header at init
     let idat_body = [];
     let width = 0;
     let height = 0;
@@ -45,10 +48,10 @@ function zipDataInPng(originalPngPath, inputContentPath, outputPath, option) {
             let start_offset = png_out.length + 8 + idat_body.length;
             content_in.forEach(v => idat_body.push(v));
             if (idat_body.length > width * height) {
-                throw new Error("[ERROR]: Input files too big for cover image resolution.");
+                throw new Error("ERROR: Input files too big for cover image resolution.");
             }
             if (!(0, checkIsPng_1.checkIsZip)(inputContentPath)) {
-                throw new Error("[ERROR]: Input content only accept .zip currently.");
+                throw new Error("ERROR: Input hidden content only accept .zip currently.");
             }
             const end_central_dir_offset = (0, bufferHelper_1.endCentralDirOffsetRindex)(idat_body);
             let comment_length = (idat_body.length - end_central_dir_offset) - 22 + 0x10;
@@ -87,9 +90,9 @@ function zipDataInPng(originalPngPath, inputContentPath, outputPath, option) {
                 idat_body[off_range[0] + 3] = byteArrOff[3];
                 central_dir_start_offset += 1;
             }
-            (0, bufferHelper_1.len_to_bytes)(idat_body.length).forEach(v => png_out.push(v)); // png_out.write(len(idat_body).to_bytes(4, "big"))
-            utf8Encode.encode("IDAT").forEach(v => png_out.push(v)); // png_out.write(b"IDAT")
-            idat_body.forEach(v => png_out.push(v)); // png_out.write(idat_body)
+            (0, bufferHelper_1.len_to_bytes)(idat_body.length).forEach(v => png_out.push(v));
+            utf8Encode.encode("IDAT").forEach(v => png_out.push(v));
+            idat_body.forEach(v => png_out.push(v));
             let buffTemp = Buffer.from([...utf8Encode.encode("IDAT"), ...idat_body]);
             // console.log("zlib.crc32", crc32.unsigned(buffTemp)); // Debug number, important
             (0, bufferHelper_1.len_to_bytes)(buffer_crc32_1.default.unsigned(buffTemp)).forEach(v => png_out.push(v)); // zlib.crc32
