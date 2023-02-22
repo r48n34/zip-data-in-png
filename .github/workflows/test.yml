@@ -1,0 +1,16 @@
+name: test-packages
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  testing:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install modules
+      run: yarn
+    - name: Run Jest tests
+      run: yarn test
