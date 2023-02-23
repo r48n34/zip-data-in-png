@@ -49,6 +49,11 @@ zipDataInPng (
 )
 ```
 
+**Notices:**   
+1. The input file MUST be a `.png` file.  
+2. Hidden file MUST be a `.zip` file.  
+3. If you see `ERROR: Input files too big for cover image resolution.`, means the input `.png` resolution is too high.
+
 ## Params
 ```ts
 export function zipDataInPng(
@@ -59,7 +64,7 @@ export function zipDataInPng(
 )
 
 interface zipDataInPngOptions {
-    quiet: boolean // Default: false, if true then will console.log info
+    quiet: boolean // Default: false, if true then will console.log all info
 }
 ```
 
