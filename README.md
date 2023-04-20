@@ -1,8 +1,17 @@
 # tweetable-polyglot-png in js
 
+Pack up to 3MB of data into a tweetable PNG polyglot file but in nodejs.
+
+
+<p align="left">
+
+<a href="https://www.npmjs.com/package/zip-data-in-png"> <img src="https://img.shields.io/npm/v/zip-data-in-png" /> </a>
+<a href="https://github.com/r48n34/zip-data-in-png"><img src="https://img.shields.io/github/actions/workflow/status/r48n34/zip-data-in-png/test.yml" /></a>
+
+</p>
+
 Original Repo: https://github.com/DavidBuchanan314/tweetable-polyglot-png
 
-Pack up to 3MB of data into a tweetable PNG polyglot file but in nodejs.
 
 ## Install
 ```bash
@@ -16,11 +25,11 @@ Currently in beta, please do not use it in productions.
 
 ## Features
 1. Fully Sync
-2. In typescript
+2. In typescript development
 3. Works in node.js (Not support web currently)
 
-## Why not in python
-IDK
+## Why not in python but nodejs
+I Don't know.
 
 ## Usage
 
