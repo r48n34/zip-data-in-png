@@ -1,4 +1,5 @@
 import AdmZip from "adm-zip"
+import { Buffer } from 'node:buffer';
 
 export function zipfileGetCounter(zipFile: string | Buffer){
     const zip = new AdmZip(zipFile);

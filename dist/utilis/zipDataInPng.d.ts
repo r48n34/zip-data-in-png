@@ -1,4 +1,5 @@
 /// <reference types="node" />
+import { Buffer } from 'node:buffer';
 interface zipDataInPngOptions {
     quiet: boolean;
 }

@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.centralDirStartOffset = exports.endCentralDirOffsetRindex = exports.len_to_bytes_little = exports.len_to_bytes = exports.int_from_bytes_little = exports.int_from_bytes = exports.zipfileGetCounter = void 0;
 const adm_zip_1 = __importDefault(require("adm-zip"));
+const node_buffer_1 = require("node:buffer");
 function zipfileGetCounter(zipFile) {
     const zip = new adm_zip_1.default(zipFile);
     const zipEntries = zip.getEntries(); // an array of ZipEntry records
@@ -18,7 +19,7 @@ function int_from_bytes(bufferArray) {
 }
 exports.int_from_bytes = int_from_bytes;
 function int_from_bytes_little(bufferArray) {
-    const buf = Buffer.from(bufferArray.reverse());
+    const buf = node_buffer_1.Buffer.from(bufferArray.reverse());
     return buf.readUInt32BE(0);
 }
 exports.int_from_bytes_little = int_from_bytes_little;

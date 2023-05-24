@@ -1,5 +1,6 @@
 import fs from "fs";
 import crc32 from "buffer-crc32"
+import { Buffer } from 'node:buffer';
 
 import { checkIsPng, checkIsZip } from "./checkIsPng";
 import { 

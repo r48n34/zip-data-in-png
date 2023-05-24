@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.zipDataInPng = exports.pngAddHiddenContent = void 0;
 const fs_1 = __importDefault(require("fs"));
 const buffer_crc32_1 = __importDefault(require("buffer-crc32"));
+const node_buffer_1 = require("node:buffer");
 const checkIsPng_1 = require("./checkIsPng");
 const bufferHelper_1 = require("./bufferHelper");
 // Input the png buffer, and hide a zip file in the png raw data
@@ -57,7 +58,7 @@ option) {
             let cdent_count = (0, bufferHelper_1.zipfileGetCounter)(content_in);
             // find the offset of the central directory entries, and fix it
             let cd_range = [end_central_dir_offset + 16, end_central_dir_offset + 16 + 4];
-            let central_dir_start_offset = (0, bufferHelper_1.int_from_bytes_little)(Buffer.from([
+            let central_dir_start_offset = (0, bufferHelper_1.int_from_bytes_little)(node_buffer_1.Buffer.from([
                 idat_body[cd_range[0]],
                 idat_body[cd_range[0] + 1],
                 idat_body[cd_range[0] + 2],
@@ -71,7 +72,7 @@ option) {
             for (let i = 0; i < cdent_count; i++) {
                 central_dir_start_offset = (0, bufferHelper_1.centralDirStartOffset)(idat_body, central_dir_start_offset);
                 let off_range = [central_dir_start_offset + 42];
-                let off = (0, bufferHelper_1.int_from_bytes_little)(Buffer.from([
+                let off = (0, bufferHelper_1.int_from_bytes_little)(node_buffer_1.Buffer.from([
                     idat_body[off_range[0]],
                     idat_body[off_range[0] + 1],
                     idat_body[off_range[0] + 2],
@@ -87,7 +88,7 @@ option) {
             (0, bufferHelper_1.len_to_bytes)(idat_body.length).forEach(v => png_out.push(v));
             utf8Encode.encode("IDAT").forEach(v => png_out.push(v));
             idat_body.forEach(v => png_out.push(v));
-            let buffTemp = Buffer.from([...utf8Encode.encode("IDAT"), ...idat_body]);
+            let buffTemp = node_buffer_1.Buffer.from([...utf8Encode.encode("IDAT"), ...idat_body]);
             // console.log("zlib.crc32", crc32.unsigned(buffTemp)); // Debug number, important
             (0, bufferHelper_1.len_to_bytes)(buffer_crc32_1.default.unsigned(buffTemp)).forEach(v => png_out.push(v)); // zlib.crc32
         }
