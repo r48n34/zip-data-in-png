@@ -3,20 +3,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.zipDataInPng = void 0;
+exports.zipDataInPng = exports.pngAddHiddenContent = void 0;
 const fs_1 = __importDefault(require("fs"));
 const buffer_crc32_1 = __importDefault(require("buffer-crc32"));
 const checkIsPng_1 = require("./checkIsPng");
 const bufferHelper_1 = require("./bufferHelper");
-function zipDataInPng(originalPngPath, inputContentPath, outputPath, option) {
-    if (originalPngPath === "" || inputContentPath === "" || outputPath === "") {
-        throw new Error("ERROR: Invalid input path");
-    }
+// Input the png buffer, and hide a zip file in the png raw data
+function pngAddHiddenContent(png_in, // Png file
+content_in, // Zip file
+option) {
     let finalOptions = Object.assign({ quiet: true }, option);
     let utf8Encode = new TextEncoder();
-    (0, checkIsPng_1.checkIsPng)(originalPngPath);
-    const png_in = fs_1.default.readFileSync(originalPngPath, { flag: 'r' });
-    const content_in = fs_1.default.readFileSync(inputContentPath, { flag: 'r' });
     let png_out = [137, 80, 78, 71, 13, 10, 26, 10]; // Uint8Array at final, png header at init
     let idat_body = [];
     let width = 0;
@@ -50,9 +47,6 @@ function zipDataInPng(originalPngPath, inputContentPath, outputPath, option) {
             if (idat_body.length > width * height) {
                 throw new Error("ERROR: Input files too big for cover image resolution.");
             }
-            if (!(0, checkIsPng_1.checkIsZip)(inputContentPath)) {
-                throw new Error("ERROR: Input hidden content only accept .zip currently.");
-            }
             const end_central_dir_offset = (0, bufferHelper_1.endCentralDirOffsetRindex)(idat_body);
             let comment_length = (idat_body.length - end_central_dir_offset) - 22 + 0x10;
             let cl_range = [end_central_dir_offset + 20, end_central_dir_offset + 20 + 2];
@@ -60,7 +54,7 @@ function zipDataInPng(originalPngPath, inputContentPath, outputPath, option) {
             idat_body[cl_range[0]] = byteArr[0];
             idat_body[cl_range[0] + 1] = byteArr[1];
             // find the number of central directory entries
-            let cdent_count = (0, bufferHelper_1.zipfileGetCounter)(inputContentPath);
+            let cdent_count = (0, bufferHelper_1.zipfileGetCounter)(content_in);
             // find the offset of the central directory entries, and fix it
             let cd_range = [end_central_dir_offset + 16, end_central_dir_offset + 16 + 4];
             let central_dir_start_offset = (0, bufferHelper_1.int_from_bytes_little)(Buffer.from([
@@ -106,7 +100,22 @@ function zipDataInPng(originalPngPath, inputContentPath, outputPath, option) {
         }
         i = (i + 8 + chunk_len + 4);
     }
-    fs_1.default.writeFileSync(outputPath, Uint8Array.from(png_out));
+    return Uint8Array.from(png_out);
+}
+exports.pngAddHiddenContent = pngAddHiddenContent;
+function zipDataInPng(originalPngPath, inputContentPath, outputPath, option) {
+    if (originalPngPath === "" || inputContentPath === "" || outputPath === "") {
+        throw new Error("ERROR: Invalid input path");
+    }
+    let finalOptions = Object.assign({ quiet: true }, option);
+    (0, checkIsPng_1.checkIsPng)(originalPngPath); // Error if original file is not a png
+    if (!(0, checkIsPng_1.checkIsZip)(inputContentPath)) {
+        throw new Error("ERROR: Input hidden content only accept .zip currently.");
+    }
+    const png_in = fs_1.default.readFileSync(originalPngPath, { flag: 'r' });
+    const content_in = fs_1.default.readFileSync(inputContentPath, { flag: 'r' });
+    const png_out = pngAddHiddenContent(png_in, content_in, finalOptions);
+    fs_1.default.writeFileSync(outputPath, png_out);
     !finalOptions.quiet && console.log(`Finish writing to: ${outputPath}`);
     return true;
 }

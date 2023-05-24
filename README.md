@@ -31,7 +31,11 @@ Currently in beta, please do not use it in productions.
 ## Why not in python but nodejs
 I Don't know.
 
-## Usage
+## Normal Usage
+
+`zipDataInPng()`
+
+Hide a `hello.zip` into `deno.png`, and output the file named `final.png`
 
 ```ts
 import path from "path";
@@ -42,6 +46,28 @@ zipDataInPng (
     path.join(__dirname, "hello.zip"), // .zip file to hide
     path.join(__dirname, "final.png") // Output file
 )
+```
+
+---
+
+`pngAddHiddenContent()`
+
+Hide a `hi.zip` into `cat.png`, and return a `Uint8Array` png Buffer for save in `hidden.png`. 
+
+```ts
+import fs from "fs";
+import { pngAddHiddenContent } from 'zip-data-in-png';
+
+const png_in = fs.readFileSync("cat.png", {flag:'r'});
+const content_in = fs.readFileSync("hi.zip", {flag:'r'});
+
+const result: Uint8Array = pngAddHiddenContent (
+    png_in,         // Original data
+    content_in,     // .zip file to hide
+    { quiet: true } // Output file
+)
+
+fs.writeFileSync("hidden.png", result);
 ```
 
 ## Sample
@@ -70,7 +96,13 @@ export function zipDataInPng(
     inputContentPath: string,
     outputPath: string,
     option?: zipDataInPngOptions
-)
+) : boolean
+
+export function pngAddHiddenContent(
+    png_in: Buffer, // Png file
+    content_in: Buffer, // Zip file
+    option?: zipDataInPngOptions
+): Uint8Array
 
 interface zipDataInPngOptions {
     quiet: boolean // Default: false, if true then will console.log all info

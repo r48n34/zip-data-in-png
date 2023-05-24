@@ -1,5 +1,5 @@
 /// <reference types="node" />
-export declare function zipfileGetCounter(zipFile: string): number;
+export declare function zipfileGetCounter(zipFile: string | Buffer): number;
 export declare function int_from_bytes(bufferArray: Buffer): number;
 export declare function int_from_bytes_little(bufferArray: Buffer | number[]): number;
 export declare function len_to_bytes(num: number): number[];

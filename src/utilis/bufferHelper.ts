@@ -1,6 +1,6 @@
 import AdmZip from "adm-zip"
 
-export function zipfileGetCounter(zipFile: string){
+export function zipfileGetCounter(zipFile: string | Buffer){
     const zip = new AdmZip(zipFile);
     const zipEntries = zip.getEntries(); // an array of ZipEntry records
 

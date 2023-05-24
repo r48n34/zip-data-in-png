@@ -88,3 +88,41 @@ test('zipDataInPng to error in hidden content is not a .zip ', () => {
     }).toThrow("ERROR: Input hidden content only accept .zip currently.")
 
 })
+
+test('zipDataInPng to works normal 2', () => {
+
+    let finalFilePath = path.join(__dirname, "..", "test-data", "jestTest2.png")
+
+    expect(
+        zipDataInPng (
+            path.join(__dirname, "..", "test-data", "deno.png"),
+            path.join(__dirname, "..", "test-data", "hello.zip"),
+            finalFilePath,
+        )
+    ).toBe(true);
+
+    const renameZip = "jestTest2.zip"
+    const outputDir = path.join(__dirname, "..", "test-data", renameZip)
+
+    fs.renameSync(
+        finalFilePath,
+        outputDir
+    );
+
+
+    const type = filetype(
+        fs.readFileSync(outputDir)
+    ).map( v => v.typename );
+
+    expect(type.indexOf("zip") >= 0).toBe(false);
+
+    const zip = new AdmZip(outputDir);
+    const zipEntries = zip.getEntries(); 
+    const fileNameArray = zipEntries.map( v => v.name );
+
+    expect(fileNameArray.length).toBe(2);
+    expect(fileNameArray).toEqual(["book.pdf", "hello.txt"]);
+
+    fs.unlinkSync(outputDir);
+
+})

@@ -1,2 +1,2 @@
-import { zipDataInPng } from "./utilis/zipDataInPng";
-export { zipDataInPng };
+import { zipDataInPng, pngAddHiddenContent } from "./utilis/zipDataInPng";
+export { zipDataInPng, pngAddHiddenContent };
