@@ -121,3 +121,9 @@ zipDataInPng (
     { quiet: false }
 )
 ```
+
+
+## Logs
+
+### 1.1
+1. Adding function `pngAddHiddenContent()` for advance usage.
