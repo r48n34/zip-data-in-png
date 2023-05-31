@@ -5,6 +5,8 @@ import { useHotkeys, useLocalStorage } from '@mantine/hooks';
 import { Toaster } from 'react-hot-toast';
 import Layout from '@/components/Layout';
 
+//test
+
 export default function App(props: AppProps) {
     const { Component, pageProps } = props;
 
