@@ -8,7 +8,7 @@ import Layout from '@/components/Layout';
 //test
 
 export default function App(props: AppProps) {
-    const { Component, pageProps } = props;
+    const { Component, pageProps } = props as any;
 
     const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
         key: 'mantine-color-scheme',
