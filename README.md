@@ -1,4 +1,4 @@
-# tweetable-polyglot-png in js
+# tweetable-polyglot-png js
 
 Pack up to 3MB of data into a tweetable PNG polyglot file but in nodejs.
 
