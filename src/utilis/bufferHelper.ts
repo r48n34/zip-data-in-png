@@ -5,7 +5,6 @@ export function zipfileGetCounter(zipFile: string | Buffer){
     const zip = new AdmZip(zipFile);
     const zipEntries = zip.getEntries(); // an array of ZipEntry records
 
-    // console.log(zipEntries);
     return zipEntries.length
 }
 
@@ -24,7 +23,6 @@ export function len_to_bytes(num: number){
     new DataView(b).setUint32(0, num);
 
     const data = Array.from(new Uint8Array(b));
-
     return data
 }
 

@@ -1,6 +1,8 @@
-# tweetable-polyglot-png js
+# 📚 tweetable-polyglot-png JS
 
-Pack up to 3MB of data into a tweetable PNG polyglot file but in nodejs.
+Pack up to 3MB of data into a tweetable PNG polyglot file but in Nodejs.  
+
+Works in `Windows` and `MacOS` 
 
 
 <p align="left">
@@ -10,28 +12,22 @@ Pack up to 3MB of data into a tweetable PNG polyglot file but in nodejs.
 
 </p>
 
-Original Repo: https://github.com/DavidBuchanan314/tweetable-polyglot-png
+Original Repo (Python): https://github.com/DavidBuchanan314/tweetable-polyglot-png
 
 
-## Install
+## 🔧 Install
 ```bash
 yarn add zip-data-in-png
 npm i zip-data-in-png
 ```
 
-## Status 
-Currently in beta, please do not use it in productions.
+## 🔍 Features
+1. Fully Sync  
+2. In typescript development  
+3. Works in node.js (Not support web currently)  
+4. Use Node native packages  
 
-
-## Features
-1. Fully Sync
-2. In typescript development
-3. Works in node.js (Not support web currently)
-
-## Why not in python but nodejs
-I Don't know.
-
-## Normal Usage
+## 😃 Normal Usage
 
 `zipDataInPng()`
 
@@ -47,6 +43,9 @@ zipDataInPng (
     path.join(__dirname, "final.png") // Output file
 )
 ```
+
+> Notes:
+1. See https://github.com/DavidBuchanan314/tweetable-polyglot-png?tab=readme-ov-file#cover-image-requirements for input requirements
 
 ---
 
@@ -64,13 +63,13 @@ const content_in = fs.readFileSync("hi.zip", {flag:'r'});
 const result: Uint8Array = pngAddHiddenContent (
     png_in,         // Original data
     content_in,     // .zip file to hide
-    { quiet: true } // Output file
+    { quiet: true } // Optional Flag
 )
 
 fs.writeFileSync("hidden.png", result);
 ```
 
-## Sample
+## 🔍 Samples
 Hide a `data.zip` into `deno.png`, and output the file named `result.png`
 
 ```ts
@@ -89,7 +88,7 @@ zipDataInPng (
 2. Hidden file MUST be a `.zip` file.  
 3. If you see `ERROR: Input files too big for cover image resolution.`, means the input `.png` resolution is too high.
 
-## Params
+## 🔄 Params
 ```ts
 export function zipDataInPng(
     originalPngPath: string,
@@ -99,8 +98,8 @@ export function zipDataInPng(
 ) : boolean
 
 export function pngAddHiddenContent(
-    png_in: Buffer, // Png file
-    content_in: Buffer, // Zip file
+    png_in: Buffer,     // Png file Buffer
+    content_in: Buffer, // Zip file Buffer
     option?: zipDataInPngOptions
 ): Uint8Array
 
@@ -109,7 +108,7 @@ interface zipDataInPngOptions {
 }
 ```
 
-## Advance usage
+## 🚀 Advance usage
 ```ts
 import path from "path";
 import { zipDataInPng } from 'zip-data-in-png';
@@ -123,7 +122,14 @@ zipDataInPng (
 ```
 
 
-## Logs
+## 🪵 Logs
 
-### 1.1
+### 1.2.0
+1. Better code structure.
+2. Confrim to support Windows / MacOS
+
+### 1.1.0
 1. Adding function `pngAddHiddenContent()` for advance usage.
+
+## 🔖 License
+MIT

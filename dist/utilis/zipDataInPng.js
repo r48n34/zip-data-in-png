@@ -15,7 +15,8 @@ content_in, // Zip file
 option) {
     let finalOptions = Object.assign({ quiet: true }, option);
     let utf8Encode = new TextEncoder();
-    let png_out = [137, 80, 78, 71, 13, 10, 26, 10]; // Uint8Array at final, png header at init
+    // Uint8Array at final, png header at init
+    let png_out = [137, 80, 78, 71, 13, 10, 26, 10];
     let idat_body = [];
     let width = 0;
     let height = 0;
@@ -26,7 +27,6 @@ option) {
         let chunk_type = png_in.subarray(i + 4, i + 8);
         let chunk_body = png_in.subarray(i + 8, i + 8 + chunk_len);
         let chunk_csum_raw = png_in.subarray(i + 8 + chunk_len, i + 8 + chunk_len + 4);
-        // let chunk_csum = int_from_bytes( chunk_csum_raw )
         if (["IHDR", "PLTE", "IDAT", "IEND"].indexOf(chunk_type.toString()) === -1) {
             !finalOptions.quiet && console.log("Warning: dropping non-essential or unknown chunk:", chunk_type.toString());
             i = (i + 8 + chunk_len + 4);

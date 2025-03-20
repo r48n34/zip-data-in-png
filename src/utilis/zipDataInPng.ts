@@ -31,7 +31,8 @@ export function pngAddHiddenContent(
 
     let utf8Encode = new TextEncoder();
     
-    let png_out: number[] = [137, 80, 78, 71, 13, 10, 26, 10] // Uint8Array at final, png header at init
+    // Uint8Array at final, png header at init
+    let png_out: number[] = [137, 80, 78, 71, 13, 10, 26, 10] 
    
     let idat_body: number[] = [];
     let width = 0;
@@ -46,7 +47,6 @@ export function pngAddHiddenContent(
         let chunk_body = png_in.subarray(i + 8, i + 8 + chunk_len)
     
         let chunk_csum_raw = png_in.subarray(i + 8 + chunk_len, i + 8 + chunk_len + 4)
-        // let chunk_csum = int_from_bytes( chunk_csum_raw )
     
         if(["IHDR", "PLTE", "IDAT", "IEND"].indexOf(chunk_type.toString()) === -1){
             !finalOptions.quiet && console.log("Warning: dropping non-essential or unknown chunk:", chunk_type.toString());
@@ -81,7 +81,6 @@ export function pngAddHiddenContent(
             const end_central_dir_offset = endCentralDirOffsetRindex(idat_body);
             
             let comment_length = (idat_body.length - end_central_dir_offset) - 22 + 0x10;
-            
             let cl_range = [end_central_dir_offset + 20, end_central_dir_offset + 20 + 2]
 
             const byteArr = len_to_bytes_little(comment_length, 2);

@@ -1,6 +1,6 @@
 {
   "name": "zip-data-in-png",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "tweetable-polyglot-png in node.js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -17,7 +17,9 @@
   "files": [
     "dist/*"
   ],
-  "keywords": ["zip"],
+  "keywords": [
+    "zip"
+  ],
   "devDependencies": {
     "@types/adm-zip": "^0.5.0",
     "@types/buffer-crc32": "^0.2.2",
@@ -33,5 +35,6 @@
     "buffer-crc32": "^0.2.13",
     "file-type": "^18.2.0",
     "magic-bytes.js": "^1.0.14"
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
